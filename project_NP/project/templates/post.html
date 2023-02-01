@@ -1,0 +1,18 @@
+{% extends 'flatpages/default.html' %}
+{% load filter %}
+{% load tags %}
+
+{% block title %}
+определенный пост
+{% endblock title %}
+
+
+{% block content %}
+<h3>{% t_time '%b %d %Y' %}</h3>
+<h1>{{ post.title|censor }}</h1>
+<h1>{{ post.dateCreation.date|date:"d M, Y" }}</h1>
+<h2> Рейтинг {{post.rating}}</h2>
+<h1>{{ post.text|censor }}</h1>
+<h1>{{ post.author.authorUser.username }}</h1>
+
+{% endblock content %}

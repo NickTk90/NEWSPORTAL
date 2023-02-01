@@ -1,0 +1,96 @@
+{% extends 'flatpages/default.html' %}
+{% load filter %}
+{% load tags %}
+
+
+
+
+{% block title %}
+Все посты
+{% endblock title %}
+
+
+{% block content %}
+<h3>на {% t_time '%b %d %Y' %}</h3>
+<h3>Всего новостей на странице {{posts|length}} из {{paginator.count}}</h3>
+
+{# Добавляем форму, которая объединяет набор полей, которые будут отправляться в запросе #}
+<!--   <form action="" method="get">-->
+<!--       {# Переменная, которую мы передали через контекст, может сгенерировать нам форму с полями #}-->
+<!--       {{ filterset.form.as_p }}-->
+<!--       {# Добавим кнопку отправки данных формы #}-->
+<!--       <input type="submit" value="Найти" />-->
+<!--       {% for obj in filter.qs %}-->
+<!--        {{ obj.name }}<br />-->
+<!--       {% endfor %}-->
+<!--   </form>-->
+<!--<form action="" method="get" >-->
+<!--    {{ filterset.form.non_field_errors }}-->
+
+<!--    {{ filterset.form.name__icontains.errors }}-->
+<!--    <label for="{{ filterset.form.name__icontains.id_for_label }}">Search</label>-->
+<!--    <input-->
+<!--        id="{{ filterset.form.name__icontains.id }}"-->
+<!--        name="{{ filterset.form.name__icontains.name }}"-->
+<!--        value="{{ filterset.form.name__icontains.value }}"-->
+<!--        class="form-control"-->
+<!--    >-->
+<!--    <input type="submit" class="mt-3 btn-primary" value="Найти" />-->
+<!--</form>-->
+
+{% for post in posts%}
+
+<p>{% if posts %}</p>
+    <table border="1" width="1100">
+        <tbody>
+            <tr>
+                <td><strong>Дата</strong></td>
+                <td><strong>Название</strong></td>
+                <td><strong>Описание</strong></td>
+                <td><strong>Автор</strong></td>
+                <td><strong>Рейтинг</strong></td>
+                <td><strong>Категория</strong></td>
+                <td><strong>Тип</strong></td>
+            </tr>
+            <tr>
+                <td width="100">{{ post.dateCreation.date|date:"d M, Y" }}</td>
+                <td width="150">{{ post.title|censor }}</td>
+                <td width="150">{{ post.text|censor|truncatewords:2 }}</td>
+                <td width="150">{{ post.author.authorUser.username}}</td>
+                <td width="50">{{ post.rating }}</td>
+                <td width="150"> {% for post in post.postCategory.all %}
+                                {{ post.name }}
+                                 {% endfor %}</td>
+                <td width="50">{{ post.categoryType }}</td>
+            </tr>
+        </tbody>
+    </table>
+<p>{% else %}</p>
+<h2>Постов нет!</h2>
+<p>{% endif %}</p>
+{% endfor %}
+
+ {# Добавляем пагинацию на страницу #}
+
+   {# Информация о предыдущих страницах #}
+   {% if page_obj.has_previous %}
+       <a href="?{% url_replace page=1 %}">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {# Информация о текущей странице #}
+   {{ page_obj.number }}
+
+   {# Информация о следующих страницах #}
+   {% if page_obj.has_next %}
+       <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+
+{% endblock content %}

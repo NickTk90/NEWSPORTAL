@@ -1,0 +1,13 @@
+{% extends 'flatpages/default.html' %}
+{% load filter %}
+{% load tags %}
+
+{% block content %}
+<h1>Статья</h1>
+<hr>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="EDIT" />
+</form>
+{% endblock content %}

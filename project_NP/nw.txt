@@ -1,0 +1,104 @@
+
+(venv) PS C:\Users\Николай\PycharmProjects\project_NP\project> python manage.py shell
+
+>>> from newapp.models import *
+
+1.Создать двух пользователей (с помощью метода User.objects.create_user('username')).
+>>> u1=User.objects.create_user(username='Tolik')
+>>> u2=User.objects.create_user(username='Anna')  
+
+2.Создать два объекта модели Author, связанные с пользователями.
+>>> Author.objects.create(authorUser=u1)
+<Author: Author object (1)>
+>>> Author.objects.create(authorUser=u2) 
+<Author: Author object (2)>
+
+3.Добавить 4 категории в модель Category.
+>>> Category.objects.create(name='Sport') 
+<Category: Category object (1)>
+>>> Category.objects.create(name='Political')
+<Category: Category object (2)>
+>>> Category.objects.create(name='IT')    
+<Category: Category object (3)>
+>>> Category.objects.create(name='Extreme') 
+<Category: Category object (4)>
+
+4.Добавить 2 статьи и 1 новость.
+>>> Post.objects.create(author=author, categoryType='AR', title='Football 2023', text='Чемпионат мира по футболу среди юношей до 20 лет 2023 года станет 23-м по сч
+ету проведением Чемпионата мира по футболу среди юношей до 20 лет, проводимого раз в два года международного мужского юношеского чемпионата по футболу, в котором у
+частвуют национальные сборные до 20 лет ассоциаций-членов ФИФА с момента его основания в 1977 году как молодежный чемпионат мира ФИФА. Его примет Индонезия, и это 
+будет первый турнир ФИФА, принимаемый страной.[2] Это также будет всего лишь второй чемпионат мира среди юношей до 20 лет, который пройдет в Юго-Восточной Азии, пе
+рвый с 1997 года, и первый турнир ФИФА в регионе после чемпионата мира по футзалу 2012 года.') 
+>>> Post.objects.create(author=author, categoryType='AR', title='Vybory 2023', text='Свободные выборы считаются на сегодняшний день наиболее демократичной системой
+ замещения руководящих должностей в любых общностях людей.')
+>>> Post.objects.create(author=author, categoryType='NW', title='Prodlili prazdniki', text='Согласно документу, подписанному главой правительства Михаилом Мишустин
+ым, новогодние праздники начнутся 31 декабря 2022 года и продлятся до 8 января 2023-го. Первым рабочим днем в году станет понедельник, 9 января')
+
+5.Присвоить им категории (как минимум в одной статье/новости должно быть не меньше 2 категорий).
+>>> Post.objects.get(id=1).postCategory.add(Category.objects.get(id=1))
+>>> Post.objects.get(id=1).postCategory.add(Category.objects.get(id=2)) 
+>>> Post.objects.get(id=2).postCategory.add(Category.objects.get(id=3)) 
+>>> Post.objects.get(id=2).postCategory.add(Category.objects.get(id=4))  
+>>> Post.objects.get(id=3).postCategory.add(Category.objects.get(id=2)) 
+>>> Post.objects.get(id=3).postCategory.add(Category.objects.get(id=3))  
+
+6.Создать как минимум 4 комментария к разным объектам модели Post (в каждом объекте должен быть как минимум один комментарий).
+>>> Comment.objects.create(commentPost=Post.objects.get(id=1), commentUser=Author.objects.get(id=1).authorUser, text='первый коммент')
+<Comment: Comment object (1)>
+>>> Comment.objects.create(commentPost=Post.objects.get(id=1), commentUser=Author.objects.get(id=1).authorUser, text='второй коммент') 
+<Comment: Comment object (2)>
+>>> Comment.objects.create(commentPost=Post.objects.get(id=1), commentUser=Author.objects.get(id=2).authorUser, text='третий коммент') 
+<Comment: Comment object (3)>
+>>> Comment.objects.create(commentPost=Post.objects.get(id=1), commentUser=Author.objects.get(id=1).authorUser, text='четвертый коммент')
+<Comment: Comment object (4)>
+>>> Comment.objects.create(commentPost=Post.objects.get(id=2), commentUser=Author.objects.get(id=1).authorUser, text='первый коммент!!')
+<Comment: Comment object (5)>
+>>> Comment.objects.create(commentPost=Post.objects.get(id=2), commentUser=Author.objects.get(id=1).authorUser, text='второй коммент!!') 
+<Comment: Comment object (6)>
+>>> Comment.objects.create(commentPost=Post.objects.get(id=3), commentUser=Author.objects.get(id=2).authorUser, text='один коммент')   
+<Comment: Comment object (7)>
+
+7.Применяя функции like() и dislike() к статьям/новостям и комментариям, скорректировать рейтинги этих объектов.
+>>> Comment.objects.get(id=1).like()
+>>> Comment.objects.get(id=1).like()
+>>> Comment.objects.get(id=1).like()
+>>> Comment.objects.get(id=2).like() 
+>>> Comment.objects.get(id=3).like() 
+>>> Comment.objects.get(id=4).like() 
+>>> Comment.objects.get(id=5).like() 
+>>> Comment.objects.get(id=6).like()                                 
+>>> Comment.objects.get(id=7).like() 
+>>> Comment.objects.get(id=7).like() 
+>>> Comment.objects.get(id=3).like() 
+>>> Comment.objects.get(id=3).like()                                 
+>>> Comment.objects.get(id=5).like() 
+>>> Comment.objects.get(id=5).like() 
+>>> Comment.objects.get(id=6).like() 
+>>> Comment.objects.get(id=1).dislike() 
+>>> Post.objects.get(id=1).like()    
+>>> Post.objects.get(id=1).like()
+>>> Post.objects.get(id=1).like()
+>>> Post.objects.get(id=2).like() 
+>>> Post.objects.get(id=3).like() 
+>>> Post.objects.get(id=1).dislike()
+
+8.Обновить рейтинги пользователей.
+>>> Author.objects.get(id=1).update_rating()
+>>> Author.objects.get(id=2).update_rating()
+
+9.Вывести username и рейтинг лучшего пользователя (применяя сортировку и возвращая поля первого объекта).
+>>> Post.objects.order_by('-rating').values('author__authorUser__username', 'author__ratingAuthor')[0]
+{'author__authorUser__username': 'Tolik', 'author__ratingAuthor': 18}
+
+10.Вывести дату добавления, username автора, рейтинг, заголовок и превью лучшей статьи, основываясь на лайках/дислайках к этой статье.
+Post.objects.order_by('-rating').values('dateCreation', 'author__authorUser__username', 'rating', 'title','comment','text')[0]
+{'dateCreation': datetime.datetime(2023, 1, 17, 20, 35, 51, 217478), 'author__authorUser__username': 'Tolik', 'rating': 2, 'title': 'Football 2023', 'comment': 1
+, 'text': 'Чемпионат мира по футболу среди юношей до 20 лет 2023 года станет 23-м по счету проведением Чемпионата мира по футболу среди юношей до 20 лет, проводи
+мого раз в два года международного мужского юношеского чемпионата по футболу, в котором участвуют национальные сборные до 20 лет ассоциаций-членов ФИФА с момента
+ его основания в 1977 году как молодежный чемпионат мира ФИФА. Его примет Индонезия, и это будет первый турнир ФИФА, принимаемый страной.[2] Это также будет всег
+о лишь второй чемпионат мира среди юношей до 20 лет, который пройдет в Юго-Восточной Азии, первый с 1997 года, и первый турнир ФИФА в регионе после чемпионата ми
+ра по футзалу 2012 года.'}
+
+11.Вывести все комментарии (дата, пользователь, рейтинг, текст) к этой статье.
+>>> Post.objects.order_by('-rating').values('author__authorUser__username', 'author__ratingAuthor')[0]
+{'author__authorUser__username': 'Tolik', 'author__ratingAuthor': 18}
