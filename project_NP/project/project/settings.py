@@ -42,7 +42,14 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
     'django_filters',
 
-    'newapp'
+    'newapp',
+    'accounts',
+
+    # для входа через яндекс
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.yandex',
 
 ]
 
@@ -72,10 +79,27 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                # для входа через яндекс аккаунт
+                # 'django.template.context_processors.request',
             ],
         },
     },
 ]
+
+
+
+# для входа через яндекс аккаунт
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+# регистрация по эл почте
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 WSGI_APPLICATION = 'project.wsgi.application'
 
@@ -127,6 +151,11 @@ USE_TZ = False
 
 STATIC_URL = 'static/'
 
+# страница которая откроется после входа
+LOGIN_REDIRECT_URL = "/news/"
+
+ACCOUNT_FORMS = {"signup": "accounts.forms.CustomSignupForm"}
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
@@ -136,3 +165,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
+

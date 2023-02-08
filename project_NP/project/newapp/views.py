@@ -1,3 +1,5 @@
+from django.contrib.auth.mixins import PermissionRequiredMixin
+
 from .models import Post
 
 from django.urls import reverse_lazy, reverse
@@ -63,25 +65,31 @@ class ShowPost(DetailView):
 
 
 
-def index(request):
-    posts = Post.objects.all()
-    return render(request, 'posts.html', context={'posts':posts})
+# def index(request):
+#     posts = Post.objects.all()
+#     return render(request, 'posts.html', context={'posts':posts})
 
 
-class PostCreate(CreateView):
+class PostCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('newapp.add_post',)
+    raise_exception = True
     form_class = PostForm
     model = Post
     template_name = 'create.html'
     success_url = reverse_lazy('post_list')
 
-class PostUpdate(UpdateView):
+class PostUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = ('newapp.change_post',)
+    raise_exception = True
     form_class = PostForm
     model = Post
     template_name = 'edit.html'
     success_url = reverse_lazy('post_list')
 
 
-class PostDelete(DeleteView):
+class PostDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('newapp.delete_post',)
+    raise_exception = True
     model = Post
     template_name = 'delete.html'
     success_url = reverse_lazy('post_list')
