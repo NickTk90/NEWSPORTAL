@@ -51,7 +51,7 @@
             </tr>
             <tr>
                 <td width="100">{{ post.dateCreation.date|date:"d M, Y" }}</td>
-                <td width="150">{{ post.title|censor }}</td>
+                <td width="150"><a href="{% url 'post_detail' post.id %}">{{ post.title|censor }}</a></td>
                 <td width="150">{{ post.text|censor|truncatewords:2 }}</td>
                 <td width="150">{{ post.author.authorUser.username}}</td>
                 <td width="50">{{ post.rating }}</td>

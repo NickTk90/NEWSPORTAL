@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
     'django_filters',
 
-    'newapp',
+    'newapp.apps.NewappConfig',
     'accounts',
 
     # для входа через яндекс
@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.yandex',
+
+    "django_apscheduler",
 
 ]
 
@@ -100,6 +102,32 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
+# mandatory либо optional
+# ACCOUNT_CONFIRM_EMAIL_ON_GET = True позволит избежать дополнительного входа
+# и активирует аккаунт сразу, как только мы перейдём по ссылке.
+# ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS хранит количество дней,
+# когда доступна ссылка на подтверждение регистрации.
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = "nt290@yandex.ru"
+EMAIL_HOST_PASSWORD = "fcxzqxkddrwdyxfe"
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+
+DEFAULT_FROM_EMAIL = "example@yandex.ru"
+
+EMAIL_SUBJECT_PREFIX='NewsPortal'
+
+SERVER_EMAIL = "example@yandex.ru"
+MANAGERS = (
+    ('nt290', 'nt290@yandex.ru'),
+    )
+ADMINS = (
+    ('admin', 'admin@yandex.ru'),
+)
 
 WSGI_APPLICATION = 'project.wsgi.application'
 
@@ -153,6 +181,7 @@ STATIC_URL = 'static/'
 
 # страница которая откроется после входа
 LOGIN_REDIRECT_URL = "/news/"
+LOGOUT_REDIRECT_URL = "/news/"
 
 ACCOUNT_FORMS = {"signup": "accounts.forms.CustomSignupForm"}
 
@@ -166,3 +195,8 @@ STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
 
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+
+APSCHEDULER_RUN_NOW_TIMEOUT = 25
+
+SITE_URL='http://127.0.0.1:8000/'

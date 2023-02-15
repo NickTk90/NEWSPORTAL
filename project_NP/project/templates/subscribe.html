@@ -1,0 +1,7 @@
+{% extends 'flatpages/default.html' %}
+{% load filter %}
+{% load tags %}
+
+{% block content %}
+<h1 class="text-center">{{ message }}{{ post.postCategory.name}} </h1>
+{% endblock content %}
